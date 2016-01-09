@@ -1,1 +1,1 @@
-# arduiono-battle-server
+# arduino-battle-server
