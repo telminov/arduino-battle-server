@@ -10,6 +10,7 @@ class ArduinoControl():
         self.port = port
         self.ser = serial.Serial(port, 9600, dsrdtr = 1,timeout = 0)
 
+
     def arduino_write(self, par):
         self.ser.write(par)
 

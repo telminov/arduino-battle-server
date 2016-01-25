@@ -1,8 +1,8 @@
 # -*-coding:utf8 -*-
-import socket
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
+from core.additionaly.socket_server import SocketServer
 
 
 def control_game(request):
@@ -13,12 +13,20 @@ def control_game(request):
 
 
 def switch_for_arduino(request):
-    print 'dsf'
-    print request
     if request.is_ajax() and request.method == 'POST':
         toggle = request.POST['toggle']
-        arduino_send_command(toggle)
-        return HttpResponse(toggle)
+        port = 9090 #TODO передавать сюды порт
+        socket_server = get_socket(port)
+        print toggle
+        socket_server.send_data(toggle)
+
+        return HttpResponse('Good')
+
+
+def get_socket(port):
+    socket_server = SocketServer(port)
+    socket_server.accept() #подключается
+    return socket_server
 
 
 def arduino_send_command(toggle):
@@ -30,17 +38,7 @@ def arduino_send_command(toggle):
 
     #открываем порт
     #я питон запускал через судо
-    port = '/dev/ttyACM0'
+    port = '/dev/ttyACM1'
     ser = serial.Serial(port, 9600, dsrdtr = 1,timeout = 0)
 
     ser.write(toggle)
-
-
-def get_socket(port):
-    sock = socket.socket()
-    sock.bind(('0.0.0.0', port))
-    sock.listen(1) #кол-во слушателей
-
-    conn, addr = sock.accept() #принимаем подключение, как только его примет пойдем дальше
-    print 'connected:', addr
-    return sock
