@@ -3,10 +3,9 @@ import os
 import sys
  
 #открываем порт
-ser = serial.Serial('COM1', 9600, dsrdtr = 1,timeout = 0) #TODO уточнить порт
-
-#подготовка лог файлов для данных от разных устройств
-prgpath = os.path.dirname(os.path.abspath(sys.argv[0]))
+#я питон запускал через судо 
+port = '/dev/ttyACM0'
+ser = serial.Serial(port, 9600, dsrdtr = 1,timeout = 0) #TODO уточнить порт
 
 #процедура чтения и декодирования строки из порта
 def mySerialDecode():

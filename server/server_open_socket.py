@@ -4,7 +4,7 @@ import socket
 
 #порт выбираем с от 1024-65535
 sock = socket.socket()
-sock.bind(('', 9090))
+sock.bind(('0.0.0.0', 9090))
 sock.listen(1) #кол-во слушателей
 
 conn, addr = sock.accept() #принимаем подключение

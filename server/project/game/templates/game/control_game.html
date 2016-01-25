@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+    <div>
+        <img src="" height="500" width="500">
+    </div>
+
+    <div>
+        <button class="btn-danger on" id="on"> On </button>
+        <button class="btn-danger off" id="off"> Off </button>
+    </div>
+
+    <script src="{{ STATIC_URL }}game/js/control_game.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var contrtol = new Control();
+            contrtol.url_ajax_switch = '{{ url_ajax_switch }}';
+            contrtol.init();
+        })
+    </script>
+{% endblock %}
