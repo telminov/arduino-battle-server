@@ -15,10 +15,12 @@ def control_game(request):
 def switch_for_arduino(request):
     if request.is_ajax() and request.method == 'POST':
         toggle = request.POST['toggle']
-        port = 9090 #TODO передавать сюды порт
-        socket_server = get_socket(port)
-        print toggle
-        socket_server.send_data(toggle)
+        # port = 9090 #TODO передавать сюды порт
+        # socket_server = get_socket(port)
+        # print toggle
+        # socket_server.send_data(toggle)
+        arduino_send_command(toggle.encode('ascii', 'ignore'))
+        print 'sended'
 
         return HttpResponse('Good')
 
@@ -30,15 +32,14 @@ def get_socket(port):
 
 
 def arduino_send_command(toggle):
+    from core.additionaly.arduino_class import Arduino
+
     '''
     :param toggle: параметр, который мы отправляем на ардуино
     :return:
     '''
-    import serial
-
     #открываем порт
     #я питон запускал через судо
-    port = '/dev/ttyACM1'
-    ser = serial.Serial(port, 9600, dsrdtr = 1,timeout = 0)
-
-    ser.write(toggle)
+    port = '/dev/ttyACM0'
+    arduino = Arduino(port)
+    arduino.send(toggle)

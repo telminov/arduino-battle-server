@@ -23,11 +23,11 @@ class Arduino():
 
     def printAnalogDat(self):
         while 1:
-             
+
             #запуск чтения из порта и маршрутизация по файлам
             try:
                 print self.mySerialDecode()
-            
+
             #выход по Ctrl+C
             except KeyboardInterrupt:
                   break
@@ -35,11 +35,11 @@ class Arduino():
     def mySerialDecode(self):
         ''' функция возвращает список переменных разделенных \n '''
         data = "0"
-        
-        time.sleep(0.2)      
+
+        time.sleep(0.2)
         serialline = self.ser.readline().split('\n')
-        
+
         if serialline:
             data = serialline
-                   
+
         return data

@@ -6,6 +6,7 @@ class SocketServer():
     sock = socket.socket()
 
     def __init__(self, port, ip='0.0.0.0'):
+        #порт выбираем с от 1024-65535
         self.port = port
         self.ip = ip
         self.sock.bind((ip, port)) #открываем сокет с таким то портом
