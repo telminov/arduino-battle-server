@@ -8,25 +8,17 @@ const int IN3 = 7; // управление вторым мотором
 const int IN4 = 8;
 
 int i;
+char cur_data_port = 'z'; //данные с usb порта
+char last_data_port = 'z';
 
-void setup()
-{ 
-  //выхода для мотора
-  for (int i=3; i<=8; i++)
-  {
-    pinMode (i, OUTPUT);
-  }
+//функции управления мотором
 
-  //usb порт
-  Serial.begin(9600); //скорость соединения с com портом
+void MotorBrake ()
+{
+  analogWrite(EN1, 0);
+  analogWrite(EN2, 0);
+  delay(500);
 }
-
-// void MotorGo();
-// void MotorGoesBack();
-// void MotorBrake();
-// void MotorGoesRight();
-// void MotorGoesLeft();
-
 
 void MotorGo ()
 { 
@@ -58,24 +50,6 @@ void MotorGoesBack ()
       analogWrite(EN2, i);
       delay(10);
   }
-}
-
-//Stops motor
-void MotorBrake ()
-{
-//  digitalWrite (IN2, LOW);
-//  digitalWrite (IN1, LOW); 
-//  digitalWrite (IN4, LOW);
-//  digitalWrite (IN3, LOW); 
-//  for (i = i; i >= 0; i--)
-//  {
-//      analogWrite(EN1, i);
-//      analogWrite(EN2, i);
-//      delay(10);
-//  }
-  analogWrite(EN1, 0);
-  analogWrite(EN2, 0);
-  delay(500);
 }
 
 void MotorGoesRight()
@@ -116,42 +90,80 @@ void MotorGoesLeft()
   }
 }
 
+//------------------------------------------------------------------//
+void setup()
+{ 
+  //выхода для мотора
+//  for (int i=2; i<=8; i++)
+//  {
+//    pinMode (i, OUTPUT);
+//  }
+  pinMode (IN4, OUTPUT);
+  pinMode (IN3, OUTPUT);
+  pinMode (IN2, OUTPUT);
+  pinMode (IN1, OUTPUT);
+  pinMode (EN2, OUTPUT);
+  pinMode (EN1, OUTPUT);
+
+  //usb порт
+  Serial.begin(9600); //скорость соединения с com портом
+}
+
+// void MotorGo();
+// void MotorGoesBack();
+// void MotorBrake();
+// void MotorGoesRight();
+// void MotorGoesLeft();
+
+//---------------------------------------------//
 void loop()
 {  
  if (Serial.available() > 0) // если что-то пришло с com порта
- { 
-    char data_port = Serial.read();
-    switch (data_port) //читаем переменную (по 1 символу) с порта
+ {    
+    char cur_data_port = Serial.read();
+    Serial.print(last_data_port);
+    Serial.print(cur_data_port);
+    Serial.println('w');
+    if (last_data_port != cur_data_port ) 
     { 
-      case 'w':
-      {
-        Serial.println(data_port);
-        MotorGo();
-      }
-    
-      case 's':
-      {
-        Serial.println(data_port);
-        MotorGoesBack();
-      }
-    
-      case ' ':
+      char last_data_port = cur_data_port;
+      switch (cur_data_port) //читаем переменную (по 1 символу) с порта
       { 
-        Serial.println(data_port);
-        MotorBrake();
-      }
-        
-      case 'd':
-      { 
-        Serial.println(data_port);
-        MotorGoesRight();
-      }
-      case 'a':
-      { 
-        Serial.println(data_port);
-        MotorGoesLeft();
-      }
-    } 
+        case 'w':
+        {
+          Serial.println(cur_data_port);
+          MotorGo();
+           break;
+        }
+      
+        case 's':
+        {
+          Serial.println(cur_data_port);
+          MotorGoesBack();
+           break;
+        }
+      
+        case 'b':
+        { 
+          Serial.println(cur_data_port);
+          MotorBrake();
+           break;
+        }
+          
+        case 'd':
+        { 
+          Serial.println(cur_data_port);
+          MotorGoesRight();
+           break;
+        }
+        case 'a':
+        { 
+          Serial.println(cur_data_port);
+          MotorGoesLeft();
+           break;
+        }
+      } 
+    }
   }
 }
 
