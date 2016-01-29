@@ -14,32 +14,9 @@ class Arduino():
         self.ser.write(data)
 
     def get(self):
-        print self.ser.readline()
-        return self.ser.readline()
+        data = self.ser.readline().split('\r\n')[0]
+        print data
+        return data
 
     def close_connect(self):
         self.ser.close()
-
-
-    def printAnalogDat(self):
-        while 1:
-
-            #запуск чтения из порта и маршрутизация по файлам
-            try:
-                print self.mySerialDecode()
-
-            #выход по Ctrl+C
-            except KeyboardInterrupt:
-                  break
-
-    def mySerialDecode(self):
-        ''' функция возвращает список переменных разделенных \n '''
-        data = "0"
-
-        time.sleep(0.2)
-        serialline = self.ser.readline().split('\n')
-
-        if serialline:
-            data = serialline
-
-        return data

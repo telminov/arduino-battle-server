@@ -8,6 +8,7 @@ decode_results results;
 // ультразвуковой дальномер
 // Trig - 12, Echo - 13
 Ultrasonic ultrasonic(12, 13);
+int count_iter = 0; //параметр для правильного определения дистанции
 
 // мотор
 const int EN1 = 3; // упр 1-ым enA правое
@@ -183,11 +184,20 @@ switch (ir_value) //читаем переменную (по 1 символу) с
 
 void UltrasonicDataSendPort()
 { 
-  if (millis() % 100==0 ) //условие, что бы не засоряло порт
+  if (millis() % 1000==0 )
   {
-    float dist_cm = ultrasonic.Ranging(CM);       // get distance
-    Serial.println(dist_cm);                      // print the distance
-  }   
+    if (count_iter != 5)
+    {
+      count_iter += 1;
+      // будет массив из 5 чисел, чтоб потом взять среднее число, а очень большое значение отбросить
+    }
+    else
+    {
+      count_iter = 0;
+      float dist_cm = ultrasonic.Ranging(CM);       // get distance
+      Serial.println(dist_cm);                      // print the distance
+    }
+  }  
 }
 //------------------------------------------------------------------//
 void setup()

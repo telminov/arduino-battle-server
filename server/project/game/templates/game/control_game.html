@@ -12,8 +12,13 @@
         <button class="btn-danger toogle" id="a"> a </button>
         <button class="btn-danger toogle" id="d"> d </button>
         <button class="btn-danger toogle" id="b"> brake </button>
-    </div>
 
+        <button class="btn-info get_data" id="b"> get_data </button>
+    </div>
+    dsf
+    {{ request.path }}
+    {{ request.current_url }}
+    {{ current_url }}
     <script src="{{ STATIC_URL }}game/js/control_game.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -23,6 +28,7 @@
         $(document).ready(function () {
             var contrtol = new Control();
             contrtol.url_ajax_switch = '{{ url_ajax_switch }}';
+            contrtol.url_ajax_get_port_data = '{{ url_ajax_get_port_data }}';
             contrtol.init();
         })
     </script>

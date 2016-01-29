@@ -50,12 +50,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'core.middleware.AddDmUserMiddleware',
-    # 'core.middleware.RedirectMiddleware',
-    # 'core.middleware.RedirectMapMiddleware'
+)
 
-    # 'core.middleware.CorsMiddleware',
-    # 'core.middleware.LoginMiddleware',
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.template.context_processors.debug',
+    'django.template.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+
+    'django.template.context_processors.static',
+    'django.template.context_processors.media',
 )
 
 STATIC_URL = '/static/'

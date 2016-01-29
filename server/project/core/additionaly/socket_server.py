@@ -19,11 +19,11 @@ class SocketServer():
         #conn - устройство, которое к нам приконектилось
         print 'connected:', self.addr
 
-    def get_data(self, bites=10000):
+    def get(self, bites=10000):
         data = self.conn.recv(bites)#кол-во байт для чтения
         return data
 
-    def send_data(self, data):
+    def send(self, data):
         print data
         self.conn.send(data)
 

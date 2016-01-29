@@ -10,11 +10,11 @@ class SocketClient():
         self.ip = ip #ip Сервера
         self.sock.connect((ip, port)) #коннектимся
 
-    def get_data(self, bites=10000):
+    def get(self, bites=10000):
         data = self.sock.recv(bites)#кол-во байт для чтения
         return data
 
-    def send_data(self, data):
+    def send(self, data):
         self.sock.send(data)
 
     def close_connect(self):
