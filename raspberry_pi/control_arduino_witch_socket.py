@@ -25,4 +25,6 @@ while True:
 	# 	socket_get = socket.get(1024)
 	# 	print socket_get
 	# 	arduino.send(socket_get)
+	
+	#обернуть в TRY except
 
