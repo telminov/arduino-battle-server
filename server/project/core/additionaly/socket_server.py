@@ -17,14 +17,14 @@ class SocketServer():
         #внимание, как нажмете выполнять функцию, вы не сможете ни чего предпринять пока не подключитесь
         self.conn, self.addr = self.sock.accept()
         #conn - устройство, которое к нам приконектилось
-        print 'connected:', self.addr
+        print('connected:', self.addr)
 
     def get(self, bites=10000):
         data = self.conn.recv(bites)#кол-во байт для чтения
         return data
 
     def send(self, data):
-        print data
+        print(data)
         self.conn.send(data)
 
     def close_conn(self):

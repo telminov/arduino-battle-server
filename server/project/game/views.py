@@ -10,7 +10,6 @@ def control_game(request):
     url_ajax_switch = reverse('game.views.ajax_switch_for_arduino')
     c['url_ajax_switch'] = url_ajax_switch
     c['url_ajax_get_port_data'] = reverse('game.views.ajax_get_data_from_arduino')
-    print c['url_ajax_get_port_data']
     return render(request, 'game/control_game.html', c)
 
 
@@ -22,20 +21,20 @@ def ajax_switch_for_arduino(request):
         # print toggle
         # socket_server.send(toggle)
         arduino_send_command(toggle.encode('ascii', 'ignore'))
-        print 'sended'
+        print('sended')
 
         return HttpResponse('Good')
 
 
 def ajax_get_data_from_arduino(request):
     if request.is_ajax() and request.method == 'GET':
-        print 'arduino pred get'
+        print('arduino pred get')
         # print arduino_get()
         # data = arduino_get()
 
         sock_server = get_socket(9090)
         data = sock_server.get()
-        print data
+        print(data)
         return HttpResponse(data)
 
 
