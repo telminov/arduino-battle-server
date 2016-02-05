@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" ng-app="arduinoBattle">
+    <head>
+        <meta charset="utf-8">
+        <link rel="icon" href="img/fav.ico">
+
+        <title ng-bind="'ArduinoBattle ' + swTitle.getTitle()"></title>
+
+        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="bower_components/sw-angular-utils/styles/utils.css" rel="stylesheet">
+        <link href="styles/main.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+        <div class="container">
+            <div ng-view></div>
+        </div>
+
+
+        <script src="dist/lib.js"></script>
+        <script src="dist/app.js"></script>
+        <script src="dist/templates.js"></script>
+
+
+    </body>
+</html>
