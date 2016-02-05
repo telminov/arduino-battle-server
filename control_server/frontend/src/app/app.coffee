@@ -13,11 +13,16 @@ angular.module('arduinoBattle', [
 
 .config ($routeProvider) ->
     $routeProvider
-    .when('/',
-      templateUrl: 'controllers/main.html'
-      controller: 'MainCtrl'
-      label: 'Главная'
-    )
+        .when('/',
+          templateUrl: 'controllers/main.html'
+          controller: 'MainCtrl'
+          label: ''
+        )
+        .when('/car/:id/',
+          templateUrl: 'controllers/car.html'
+          controller: 'CarCtrl'
+          label: 'Car'
+        )
 
 
 .run ($location, $rootScope, swTitle) ->
