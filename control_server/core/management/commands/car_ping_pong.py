@@ -8,8 +8,11 @@ from core import models
 class Command(BaseCommand):
     help = 'Test car socket connect'
 
+    def add_arguments(self, parser):
+        parser.add_argument('car_name', nargs='*', default=['local'])
+
     def handle(self, *args, **options):
-        car_name = 'local'
+        car_name = options['car_name'][0]
         car = models.Car.objects.get(name=car_name)
         ping_server_address = 'tcp://%s:%s' % (car.address, consts.CAR_COMMAND_SERVER_PORT)
 
