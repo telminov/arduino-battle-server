@@ -1,2 +1,6 @@
 .idea
+ansible/virt_env
 car_server/virt_env
+control_server/virt_env
+control_server/db.sqlite3
+control_server/project/local_settings.py
