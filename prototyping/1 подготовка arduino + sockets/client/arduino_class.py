@@ -6,32 +6,31 @@ import time
 
 #port = '/dev/ttyACM0'
 class Arduino():
-	def __init__(self, usb_port, speed_connected=9600, dsrdtr=1, timeout=0):
-		self.usb_port = usb_port
-		self.ser = serial.Serial(usb_port, speed_connected, dsrdtr = dsrdtr,timeout = timeout)
+    def __init__(self, usb_port, speed_connected=9600, dsrdtr=1, timeout=0):
+        self.usb_port = usb_port
+        self.ser = serial.Serial(usb_port, speed_connected, dsrdtr = dsrdtr,timeout = timeout)
 
-	def send(self, data):
-		self.ser.write(data)
+    def send(self, data):
+        self.ser.write(data)
 
-	def get(self):
-		print self.ser.readline()
-		return self.ser.readline()
+    def get(self):
+        print self.ser.readline()
+        return self.ser.readline()
 
-	def close_connect(self):
-		self.ser.close()
+    def close_connect(self):
+        self.ser.close()
 
-    def printAnalogDat():
-      while 1:
-             
+    def printAnalogDat(self):
+        while 1:
             #запуск чтения из порта и маршрутизация по файлам
             try:
-                 print self.mySerialDecode()
+                print self.mySerialDecode()
 
             #выход по Ctrl+C
             except KeyboardInterrupt:
-                  break
+                break
 
-    def mySerialDecode():
+    def mySerialDecode(self):
       ''' функция возвращает список переменных разделенных \n '''
       data = "0"
  
@@ -39,6 +38,6 @@ class Arduino():
       serialline = self.ser.readline().split('\n')
        
       if serialline:
-            data = serialline;
+            data = serialline
                    
       return data
