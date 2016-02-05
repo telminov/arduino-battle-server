@@ -15,11 +15,14 @@ class Command(BaseCommand):
 
         print('Try to connect to %s to %s...' % (car, ping_server_address))
         context = zmq.Context()
-        socket = context.socket(zmq.PUSH)
+        socket = context.socket(zmq.REQ)
         socket.connect(ping_server_address)
         print('Connected to %s successfully!' % car)
 
         while True:
             msg = input('Enter ping message: ')
             socket.send_string(msg)
+
+            response = socket.recv_string()
+            print('Get response: %s' % response)
 
