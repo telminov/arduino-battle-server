@@ -1,0 +1,4 @@
+django==1.9.2
+pyzmq==15.2.0
+aiohttp==0.21.0
+djangorestframework==3.3.2

@@ -1,1 +1,9 @@
 .idea
+ansible/virt_env
+car_server/virt_env
+control_server/virt_env
+control_server/db.sqlite3
+control_server/project/local_settings.py
+control_server/frontend/node_modules
+control_server/frontend/bower_components
+control_server/frontend/dist

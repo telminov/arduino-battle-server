@@ -1,0 +1,67 @@
+# ansible-playbook install_car.yml -v
+# ansible-playbook install_car.yml -e "clear_virt_env=yes update_cache=yes" -v
+
+---
+- hosts: cars
+  become: yes
+  become_method: sudo
+
+  vars:
+    app_path: /opt/car_server
+    app_user: car
+    git_path: https://github.com/telminov/arduino-battle-server.git
+    tmp_checkout_path: /tmp/github_project
+    source_path: "{{ app_path }}/source"
+    virt_env_path: "{{ app_path }}/virt_env"
+    clear_virt_env: no
+    update_cache: no
+
+  tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+      when: update_cache
+
+    - name: install packages
+      apt: name={{ item }}
+      with_items:
+        - git
+
+    - name: install virtual env
+      pip: name=virtualenv
+
+    - name: create car user
+      user: name={{ app_user }}
+
+
+    - name: clear source directory
+      file: path={{ source_path }} state=absent
+
+    - name: clear virtual env directory
+      file: path={{ virt_env_path }} state=absent
+      when: clear_virt_env
+
+    - name: clear checkout directory
+      file: path={{ tmp_checkout_path }} state=absent
+
+
+    - name: create car app direcotry
+      file: path={{ app_path }} state=directory mode=755 owner=car
+
+    - name: checkout code
+      git: repo={{ git_path }} dest={{ tmp_checkout_path }}
+
+    - name: move car code
+      shell: mv /tmp/github_project/car_server {{ source_path }}
+
+    - name: initiate virtualenv
+      pip: virtualenv={{ virt_env_path }}
+           virtualenv_python=python3.4
+           requirements={{ source_path }}/requirements.txt
+
+    - name: set directory owner
+      file: path={{ app_path }} recurse=yes owner=car
+
+    - name: remove tmp file
+      file: path={{ item }}
+      with_items:
+        - "{{ tmp_checkout_path }}"

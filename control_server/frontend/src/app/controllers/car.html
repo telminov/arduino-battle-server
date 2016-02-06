@@ -1,0 +1,54 @@
+<h1>
+    {{ car.name }}
+    <small>{{ car.address }}</small>
+</h1>
+
+
+<div ng-keydown="keyDownHandler($event)" ng-keyup="keyUpHandler($event)">
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <button id="forwardBtn" type="button" class="btn btn-lg btn-default btn-block" autofocus
+                    ng-class="{'btn-primary': moveStatus.forward}"
+                    ng-mousedown="move('forward', true)"
+                    ng-mouseup="move('forward', false)"
+                >Forward
+            </button>
+        </div>
+    </div>
+
+
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <button id="leftBtn" type="button" class="btn btn-lg btn-default btn-block"
+                    ng-class="{'btn-primary': moveStatus.left}"
+                    ng-mousedown="move('left', true)"
+                    ng-mouseup="move('left', false)"
+                >Left
+            </button>
+        </div>
+
+        <div class="col-md-offset-4 col-md-4">
+            <button id="rightBtn" type="button" class="btn btn-lg btn-default btn-block"
+                    ng-class="{'btn-primary': moveStatus.right}"
+                    ng-mousedown="move('right', true)"
+                    ng-mouseup="move('right', false)"
+                >Right
+            </button>
+        </div>
+    </div>
+
+
+    <br>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <button id="backwardBtn" type="button" class="btn btn-lg btn-default btn-block"
+                    ng-class="{'btn-primary': moveStatus.backward}"
+                    ng-mousedown="move('backward', true)"
+                    ng-mouseup="move('backward', false)"
+                >Backward
+            </button>
+        </div>
+    </div>
+</div>
