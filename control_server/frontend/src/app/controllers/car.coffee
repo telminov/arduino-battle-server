@@ -42,8 +42,10 @@ angular.module('arduinoBattle')
 
     ws = _createWs($scope, swWebSocket, config, carId)
     $scope.move = (direction, state) ->
+        oldState = $scope.moveStatus[direction]
         $scope.moveStatus[direction] = state
-        sendMoveStatus(ws, $scope.moveStatus)
+        if oldState != state
+            sendMoveStatus(ws, $scope.moveStatus)
 
 
     $scope.keyDownHandler = (event) ->
@@ -55,13 +57,6 @@ angular.module('arduinoBattle')
         direction = _getDirection(event)
         if direction
             $scope.move(direction, false)
-
-
-    sendPromise = $interval(
-        -> sendMoveStatus(ws, $scope.moveStatus)
-        100
-    )
-    $scope.$on('$destroy', -> $interval.cancel(sendPromise))
 
 
 _getDirection = (event) ->
@@ -101,12 +96,5 @@ _createWs = ($scope, swWebSocket, config, carId) ->
 
 
 sendMoveStatus = (ws, moveStatus) ->
-    haveActionStatus = false
-    for direction of moveStatus
-        if moveStatus.hasOwnProperty(direction) and moveStatus[direction]
-            haveActionStatus = true
-            break
-
-    if haveActionStatus
-        data = JSON.stringify(moveStatus)
-        ws.send(data)
+    data = JSON.stringify(moveStatus)
+    ws.send(data)
