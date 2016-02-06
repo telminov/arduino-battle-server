@@ -1,3 +1,2 @@
 # coding: utf-8
-
 CAR_COMMAND_SERVER_PORT = 4330
