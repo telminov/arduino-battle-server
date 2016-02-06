@@ -13,7 +13,7 @@ while True:
     msg = socket.recv_string()
     print('Get ping message: %s' % msg)
 
-    response = 'Pong: %s' % msg
+    response = msg
     socket.send_string(response)
     print('Send pong')
 

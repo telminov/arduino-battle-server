@@ -14,7 +14,6 @@ BTN_DIRECTIONS = {
 
 angular.module('arduinoBattle')
 .controller 'CarCtrl', ($scope, $routeParams, $log, $interval, config, CarResource, swWebSocket) ->
-    ws = _createWs($scope, swWebSocket, config)
 
     $scope.moveStatus = {
         forward: false
@@ -28,9 +27,24 @@ angular.module('arduinoBattle')
         $scope.car = car
 
 
+    $scope.commandLog = []
+    $scope.carCommandHandler = (commandResponse) ->
+        item = {
+            response: JSON.parse(commandResponse)
+            dt: new Date()
+        }
+        $scope.commandLog.unshift(item)
+
+        if $scope.commandLog.length > 5
+            $scope.commandLog.length = 5
+
+
+
+    ws = _createWs($scope, swWebSocket, config, carId)
     $scope.move = (direction, state) ->
         $scope.moveStatus[direction] = state
         sendMoveStatus(ws, $scope.moveStatus)
+
 
     $scope.keyDownHandler = (event) ->
         direction = _getDirection(event)
@@ -43,11 +57,11 @@ angular.module('arduinoBattle')
             $scope.move(direction, false)
 
 
-#    sendPromise = $interval(
-#        -> sendStatus(ws, $scope.moveStatus)
-#        100
-#    )
-#    $scope.$on('$destroy', -> $interval.cancel(sendPromise))
+    sendPromise = $interval(
+        -> sendMoveStatus(ws, $scope.moveStatus)
+        100
+    )
+    $scope.$on('$destroy', -> $interval.cancel(sendPromise))
 
 
 _getDirection = (event) ->
@@ -70,24 +84,29 @@ _getDirection = (event) ->
     return undefined
 
 
-_createWs = ($scope, swWebSocket, config) ->
-    ws = new swWebSocket("#{ config.wsServerAddress }/car_command")
+_createWs = ($scope, swWebSocket, config, carId) ->
+    ws = new swWebSocket("#{ config.wsServerAddress }/car_command/#{ carId }")
+
+    ws.onMessage($scope.carCommandHandler)
 
     durable = true
     ws.start(durable)
 
     $scope.$on('$destroy', -> ws.close())
 
+    # initial msg
+    sendMoveStatus(ws, $scope.moveStatus)
+
     return ws
 
 
 sendMoveStatus = (ws, moveStatus) ->
-#    haveActionStatus = false
-#    for direction of moveStatus
-#        if moveStatus.hasOwnProperty(direction) and moveStatus[direction]
-#            haveActionStatus = true
-#            break
-#
-#    if haveActionStatus
+    haveActionStatus = false
+    for direction of moveStatus
+        if moveStatus.hasOwnProperty(direction) and moveStatus[direction]
+            haveActionStatus = true
+            break
+
+    if haveActionStatus
         data = JSON.stringify(moveStatus)
         ws.send(data)
