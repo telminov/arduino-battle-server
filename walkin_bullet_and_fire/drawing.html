@@ -1,0 +1,69 @@
+     <!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div>
+    <canvas id="myCanvas" width="300" height="300" style="border: 1px solid black"></canvas>
+    <script src="sprite2.js" type="text/javascript"></script>
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var context = canvas.getContext("2d");
+
+        //Картинка фона канваса
+        var img = new Image();
+        img.src = 'sdayemsya.jpg';
+
+        //sprite
+        bulletAndFireImage = new Image();
+        bulletAndFireImage.src = "sprite_bullet_and_fire.png";
+
+
+
+        // Create sprite_bullet
+        var sprite_bullet = new Sprite({
+            context: context,
+            width: 320,
+            height: 35,
+            start_point_height: 78,
+            image: bulletAndFireImage,
+            numberOfFrames: 4, // число кадров в спрайте (каждый кадр должен быть одинаков по размера dy, dx)
+            path_points: [[0, 300], [150, 150]], //точки перемещения спрайта
+            is_dying_because_of_the_way: true
+        });
+
+        //Create sprite_fire
+        var sprite_fire = new Sprite({
+            context: context,
+            width: 506,
+            height: 35,
+            start_point_height: 120,
+            image: bulletAndFireImage,
+            numberOfFrames: 13, // число кадров в спрайте (каждый кадр должен быть одинаков по размера dy, dx)
+            path_points: [ [155, 150],[155, 150]], //точки перемещения спрайта
+            is_dying_because_of_last_frame: true
+        });
+
+        //общая функция
+        function play() {
+            context.drawImage(img, 0, 0, 300, 300); //фон
+            sprite_bullet.loop(); // функция для работы с спрайтом пули
+            if (sprite_bullet.sprite_end === true) {sprite_fire.loop();}
+	         // спрайтом огня
+        }
+
+        //задание времени, через которое будет отображаться в с
+        setTimeout(function(){
+            //кол-во действий в сек
+            setInterval(play, 1000 / 50);
+        }, 1000);
+
+    </script>
+
+</div>
+
+</body>
+</html>
