@@ -52,3 +52,12 @@
         </div>
     </div>
 </div>
+
+
+<br>
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="item in commandLog">
+        <span class="badge">{{ item.dt }}</span>
+        {{ item.response }}
+    </li>
+</ul>

@@ -123,6 +123,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+WEB_SOCKET_SERVER_PORT = 8080
+
 try:
     from project.local_settings import *
 except ImportError:

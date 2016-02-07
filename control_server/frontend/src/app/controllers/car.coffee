@@ -13,7 +13,8 @@ BTN_DIRECTIONS = {
 }
 
 angular.module('arduinoBattle')
-.controller 'CarCtrl', ($scope, $routeParams, $log, CarResource) ->
+.controller 'CarCtrl', ($scope, $routeParams, $log, $interval, config, CarResource, swWebSocket) ->
+
     $scope.moveStatus = {
         forward: false
         backward: false
@@ -26,8 +27,25 @@ angular.module('arduinoBattle')
         $scope.car = car
 
 
+    $scope.commandLog = []
+    $scope.carCommandHandler = (commandResponse) ->
+        item = {
+            response: JSON.parse(commandResponse)
+            dt: new Date()
+        }
+        $scope.commandLog.unshift(item)
+
+        if $scope.commandLog.length > 5
+            $scope.commandLog.length = 5
+
+
+
+    ws = _createWs($scope, swWebSocket, config, carId)
     $scope.move = (direction, state) ->
+        oldState = $scope.moveStatus[direction]
         $scope.moveStatus[direction] = state
+        if oldState != state
+            sendMoveStatus(ws, $scope.moveStatus)
 
 
     $scope.keyDownHandler = (event) ->
@@ -39,7 +57,6 @@ angular.module('arduinoBattle')
         direction = _getDirection(event)
         if direction
             $scope.move(direction, false)
-
 
 
 _getDirection = (event) ->
@@ -61,3 +78,23 @@ _getDirection = (event) ->
 
     return undefined
 
+
+_createWs = ($scope, swWebSocket, config, carId) ->
+    ws = new swWebSocket("#{ config.wsServerAddress }/car_command/#{ carId }")
+
+    ws.onMessage($scope.carCommandHandler)
+
+    durable = true
+    ws.start(durable)
+
+    $scope.$on('$destroy', -> ws.close())
+
+    # initial msg
+    sendMoveStatus(ws, $scope.moveStatus)
+
+    return ws
+
+
+sendMoveStatus = (ws, moveStatus) ->
+    data = JSON.stringify(moveStatus)
+    ws.send(data)

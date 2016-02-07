@@ -51,15 +51,15 @@
       git: repo={{ git_path }} dest={{ tmp_checkout_path }}
 
     - name: move car code
-      shell: mv /tmp/github_project/car_server {{ source_path }}
+      shell: mv {{ tmp_checkout_path }}/car_server {{ source_path }}
 
-    - name: initiate virtualenv
+    - name: initiate virtualenv requirements
       pip: virtualenv={{ virt_env_path }}
            virtualenv_python=python3.4
            requirements={{ source_path }}/requirements.txt
 
     - name: set directory owner
-      file: path={{ app_path }} recurse=yes owner=car
+      file: path={{ app_path }} recurse=yes owner={{ app_user }}
 
     - name: remove tmp file
       file: path={{ item }}
