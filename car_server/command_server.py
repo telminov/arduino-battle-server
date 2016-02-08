@@ -1,12 +1,12 @@
 # coding: utf-8
 import datetime
+import os
 from time import sleep
 
 import serial
 import json
 import zmq
 import consts
-import settings
 
 
 class Command:
@@ -35,7 +35,7 @@ class CommandTransmitter:
         print('Command listener server start successfully!')
 
     def connect_to_arduino(self):
-        self.serial_arduino = serial.Serial(settings.ARDUINO_DEV, 9600, dsrdtr=1, timeout=0)
+        self.serial_arduino = serial.Serial(self._get_arduino_dev(), 9600, dsrdtr=1, timeout=0)
         self.serial_arduino.isOpen()
 
     def listen(self):
@@ -76,7 +76,15 @@ class CommandTransmitter:
                     break
         return command
 
-    def _message_to_command(self, command_data: dict) -> Command:
+    @staticmethod
+    def _get_arduino_dev():
+        for f in os.scandir('/dev'):
+            if f.name.startswith('ttyACM'):
+                return f.path
+        raise Exception('No Arduino devices detected')
+
+    @staticmethod
+    def _message_to_command(command_data: dict) -> Command:
         command = Command()
         command.forward = command_data['forward']
         command.backward = command_data['backward']
