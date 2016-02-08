@@ -1,3 +1,3 @@
 # coding: utf-8
 
-ARDUINO_DEV = '/dev/ttyACM1'
+ARDUINO_DEV = '/dev/ttyACM0'
