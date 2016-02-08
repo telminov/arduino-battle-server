@@ -109,8 +109,8 @@ class CarCommandHandler(WebSocketHandler):
         while not ws.closed:
             try:
                 command = self.command_queue.get_nowait()
-                response = commander.send_command(command)
-                ws.send_str(response)
+                commander.send_command(command)
+                ws.send_str(command)
                 # print('Response:', response, now())
                 self.command_queue.task_done()
             except Empty:

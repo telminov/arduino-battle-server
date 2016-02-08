@@ -1,5 +1,6 @@
 # coding: utf-8
 import datetime
+from time import sleep
 
 import serial
 import json
@@ -29,7 +30,7 @@ class CommandTransmitter:
     def start_listener_server(self):
         print('Starting command listener server %s...' % self._get_server_address())
         self.listener_context = zmq.Context()
-        self.listener_socket = self.listener_context.socket(zmq.REP)
+        self.listener_socket = self.listener_context.socket(zmq.PULL)
         self.listener_socket.bind(self._get_server_address())
         print('Command listener server start successfully!')
 
@@ -37,20 +38,19 @@ class CommandTransmitter:
         self.serial_arduino = serial.Serial(settings.ARDUINO_DEV, 9600, dsrdtr=1, timeout=0)
         self.serial_arduino.isOpen()
 
-
     def listen(self):
         # TODO: add stoping logic for case of lose signal
         while True:
-            command_msg = self.listener_socket.recv_string()
+            command_msg = self._get_latest_command()
             print('Get command %s' % command_msg, datetime.datetime.now())
 
             command_data = json.loads(command_msg)
             command = self._message_to_command(command_data)
             self._transmit_command(command)
 
-            command_data['processed'] = True
-            response = json.dumps(command_data)
-            self.listener_socket.send_string(response)
+            # command_data['processed'] = True
+            # response = json.dumps(command_data)
+            # self.listener_socket.send_string(response)
 
     def close(self):
         if hasattr(self, 'listener_socket'):
@@ -63,6 +63,18 @@ class CommandTransmitter:
     def _get_server_address():
         address = 'tcp://*:%s' % consts.CAR_COMMAND_SERVER_PORT
         return address
+
+    def _get_latest_command(self):
+        command = None
+        while True:
+            try:
+                command = self.listener_socket.recv_string(flags=zmq.NOBLOCK)
+            except zmq.Again:
+                if command is None:
+                    sleep(0.01)
+                else:
+                    break
+        return command
 
     def _message_to_command(self, command_data: dict) -> Command:
         command = Command()

@@ -12,8 +12,8 @@ class Commander:
     def send_command(self, command: str) -> str:
         socket = self._get_socket()
         socket.send_string(command)
-        response = socket.recv_string()     # TODO: non blocking for case fail car server do to processing command
-        return response
+        # response = socket.recv_string()     # TODO: non blocking for case fail car server do to processing command
+        # return response
 
     def close(self):
         if self._has_socket():
@@ -25,7 +25,7 @@ class Commander:
     def _get_socket(self):
         if not self._has_socket():
             self._context = zmq.Context()
-            self._socket = self._context.socket(zmq.REQ)
+            self._socket = self._context.socket(zmq.PUSH)
             self._socket.connect(self._get_car_server_address())
         return self._socket
 
