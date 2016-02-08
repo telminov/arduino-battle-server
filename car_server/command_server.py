@@ -78,9 +78,9 @@ class CommandTransmitter:
 
     @staticmethod
     def _get_arduino_dev():
-        for f in os.scandir('/dev'):
-            if f.name.startswith('ttyACM'):
-                return f.path
+        for name in os.listdir('/dev'):
+            if name.startswith('ttyACM'):
+                return '/dev/%s' % name
         raise Exception('No Arduino devices detected')
 
     @staticmethod
