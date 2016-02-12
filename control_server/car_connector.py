@@ -12,8 +12,6 @@ class Commander:
     def send_command(self, command: str) -> str:
         socket = self._get_socket()
         socket.send_string(command)
-        # response = socket.recv_string()     # TODO: non blocking for case fail car server do to processing command
-        # return response
 
     def close(self):
         if self._has_socket():
