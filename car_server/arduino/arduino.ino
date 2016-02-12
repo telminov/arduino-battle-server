@@ -1,12 +1,19 @@
 #include <Servo.h>
 
 const int MOTOR_PIN = 3;
+const int LED_PIN = 5;
 const int SERVO_PIN = 9;
+const int MIN_SPEED = 1;
+const int MAX_SPEED = 3;
+const int MAX_COMMAND_LENGTH = 6;
 
-boolean isMoveForward = 0;
-boolean isMoveBackward = 0;
-boolean isMoveLeft = 0;
-boolean isMoveRight = 0;
+bool isMoveForward = false;
+bool isMoveBackward = false;
+bool isMoveLeft = false;
+bool isMoveRight = false;
+bool isLedBlink = false;
+int movingSpeed = MAX_SPEED;
+char command[MAX_COMMAND_LENGTH] = "";
 
 Servo servo;
 
@@ -23,20 +30,21 @@ void comply() {
   else if (isMoveRight)
     right();
   else
-    center ();
+    center();
+
+  if (isHeartBeat)
+    blinkLed();
 }
 
 void setup() {
   Serial.begin(9600);
   servo.attach(SERVO_PIN);
   pinMode(MOTOR_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
 }
 
-char command[4] = "";
-int i = 0;
-
 void loop() {
-//  moveForward();
+  int i = 0;
   if (Serial.available() > 0 ) {
     char ch = Serial.read();
     if (ch == '\n') {
@@ -58,13 +66,22 @@ void processCommand() {
   isMoveBackward = command[1] == '1';
   isMoveLeft = command[2] == '1';
   isMoveRight = command[3] == '1';
+  isLedBlink = command[4] == '1';
+
+  int speed = command[5] - '0';
+  if (speed > MIN_SPEED && speed < MAX_SPEED)
+      movingSpeed = speed;
   
   comply();
 }
 
 void moveForward() {
-//  analogWrite(MOTOR_PIN, 200);
-  digitalWrite(MOTOR_PIN, HIGH);
+  if (movingSpeed == 1)
+    analogWrite(MOTOR_PIN, 200);
+  else if (movingSpeed == 2)
+    analogWrite(MOTOR_PIN, 225);
+  else
+    digitalWrite(MOTOR_PIN, HIGH);
 }
 
 void stopMoving() {
@@ -72,18 +89,24 @@ void stopMoving() {
 }
 
 void left() {
-  servo.write(40);
+  servo.write(140);
 };
 void center() {
   servo.write(90);
 };
 void right() {
-  servo.write(140);
+  servo.write(40);
 };
 
 void clearCommand() {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < MAX_COMMAND_LENGTH; i++) {
     command[i] = '0';
   }
+}
+
+void blinkLed() { 
+  analogWrite(LED_PIN, 10);
+  delay(50);
+  digitalWrite(LED_PIN, LOW);
 }
 
