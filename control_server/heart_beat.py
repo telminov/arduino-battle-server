@@ -16,7 +16,7 @@ class Heart:
             'dt': datetime.datetime.now().isoformat(),
         }
         self.socket.send_json(beat_msg)
-        # print(beat_msg)
+        print(beat_msg)
 
     def start(self):
         self.socket.bind('tcp://*:%s' % consts.HEART_BEAT_PORT)

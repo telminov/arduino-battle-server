@@ -1,3 +1,6 @@
 # coding: utf-8
 CAR_COMMAND_SERVER_PORT = 4330
 HEART_BEAT_PORT = 4331
+
+SERVER_SETTINGS_PATH = 'server_settings.json'
+

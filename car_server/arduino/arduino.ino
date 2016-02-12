@@ -11,9 +11,10 @@ bool isMoveForward = false;
 bool isMoveBackward = false;
 bool isMoveLeft = false;
 bool isMoveRight = false;
-bool isLedBlink = false;
 int movingSpeed = MAX_SPEED;
+bool isLedBlink = false;
 char command[MAX_COMMAND_LENGTH] = "";
+int commandIndex = 0;
 
 Servo servo;
 
@@ -32,7 +33,7 @@ void comply() {
   else
     center();
 
-  if (isHeartBeat)
+  if (isLedBlink)
     blinkLed();
 }
 
@@ -43,17 +44,17 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
 }
 
+
 void loop() {
-  int i = 0;
   if (Serial.available() > 0 ) {
     char ch = Serial.read();
     if (ch == '\n') {
       processCommand();
       clearCommand();
-      i = 0;
+      commandIndex = 0;
     } else {
-      command[i] = ch;
-      i++;
+      command[commandIndex] = ch;
+      commandIndex++;
     }
   }
   
@@ -66,11 +67,12 @@ void processCommand() {
   isMoveBackward = command[1] == '1';
   isMoveLeft = command[2] == '1';
   isMoveRight = command[3] == '1';
-  isLedBlink = command[4] == '1';
 
-  int speed = command[5] - '0';
+  int speed = command[4] - '0';
   if (speed > MIN_SPEED && speed < MAX_SPEED)
       movingSpeed = speed;
+
+  isLedBlink = command[5] == '1';
   
   comply();
 }
