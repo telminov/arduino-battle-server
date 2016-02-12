@@ -25,6 +25,7 @@
       apt: name={{ item }}
       with_items:
         - git
+        - ntp
 
     - name: install python utils
       pip: name={{ item }}
